@@ -1,6 +1,8 @@
 require 'json'
 
-plugins = JSON.parse(IO.read('plugins.json'))
+data = IO.read('plugins.json')
+data.force_encoding('utf-8')
+plugins = JSON.parse(data)
 
 desc "Clones all repositories to the 'clones' folder"
 task :clone do
@@ -42,7 +44,7 @@ A list of Sketch plugins hosted at GitHub, in alphabetical order.
 
 EOF
 
-  plugins.sort_by { |k, v| k["owner"] }.each do |plugin|
+  plugins.sort_by { |k, v| k["owner"].downcase + "/" + k["name"].downcase }.each do |plugin|
     name  = plugin['name']
     owner = plugin['owner']
     url   = "https://github.com/#{owner.downcase}/#{name.downcase}"
